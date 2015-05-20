@@ -1,2 +1,13 @@
 @import 'common/reset.less';
-@import 'components/fancy-select.less';
+@import 'components/fancy-select/fancy-select.less';
+
+@screen-xs: 0px;
+@screen-lt-sm: 479px;
+@screen-sm: 480px;
+@screen-md: 768px;
+@screen-lt-lg: 1199px;
+@screen-lg: 1200px;
+
+@media(min-width: @screen-sm){
+	@import 'components/fancy-select/fancy-select-sm.less';
+}
