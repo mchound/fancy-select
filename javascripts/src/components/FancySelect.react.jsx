@@ -88,13 +88,7 @@ module.exports = React.createClass({
 
 	_getOptions: function(){
 
-		var available = this.state.available;
-
-		if(this.props.ordered){
-			available = available.sort(function(a,b){
-				return a.text > b.text ? 1 : a.text < b.text ? -1 : 0;
-			});
-		}
+		var available = this._sort(this.state.available);
 
 		return available.map(function(item){
 
@@ -112,13 +106,7 @@ module.exports = React.createClass({
 
 		if(!this.props.multiple) return null;
 
-		var selected = this.state.selected;
-
-		if(this.props.ordered){
-			selected = selected.sort(function(a,b){
-				return a.text > b.text ? 1 : a.text < b.text ? -1 : 0;
-			});
-		}
+		var selected = this._sort(this.state.selected);
 
 		return selected.map(function(item){
 
@@ -192,6 +180,19 @@ module.exports = React.createClass({
 
 	_close: function(){
 		this.setState({showOptions: false});	
+	},
+
+	_sort: function(items){
+
+		if(!this.props.order) return items;
+
+		var order = this.props.order.toLowerCase();
+		var direction = order === 'ascending' ? 1 : order === 'descending' ? -1 : 1;
+
+		return items.sort(function(a,b){
+			return a.text > b.text ? direction : a.text < b.text ? -1 * direction : 0;
+		});
+
 	}
 
 
