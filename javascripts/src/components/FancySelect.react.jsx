@@ -6,31 +6,8 @@ module.exports = React.createClass({
 
 		return {
 			showOptions: false,
-			items: [
-				{value: 'sv', text: 'Sweden'},
-				{value: 'no', text: 'Norway'},
-				{value: 'dk', text: 'Denmark'},
-				{value: 'fi', text: 'Finland'},
-				{value: 'ic', text: 'Iceland'},
-				{value: 'ge', text: 'Germany'},
-				{value: 'en', text: 'England'},
-				{value: 'sc', text: 'Scotland'},
-				{value: 'fr', text: 'France'},
-				{value: 'po', text: 'Poland'},
-				{value: 'ne', text: 'Netherlands'},
-				{value: 'be', text: 'Belgium'},
-				{value: 'it', text: 'Italy'},
-				{value: 'au', text: 'Austria'},
-				{value: 'sw', text: 'Switzerland'},
-				{value: 'sp', text: 'Spain'},
-				{value: 'por', text: 'Portugal'},
-				{value: 'gr', text: 'Greece'},
-				{value: 'sl', text: 'Slovakia'},
-				{value: 'es', text: 'Estonia'},
-				{value: 'lv', text: 'Latvia'},
-				{value: 'li', text: 'Lithuania'}
-			],
-			selected: null,
+			available: this.props.items,
+			selected: [],
 			filter: ''
 		};
 
@@ -49,7 +26,7 @@ module.exports = React.createClass({
 			<div data-am-fancyselect>
 
 				<div className="select" onClick={this._onSelectClick}>
-					{!!this.state.selected ? this.state.selected.text : 'Choose Country'}
+					Choose Countries
 				</div>
 
 				<div className={optionsClassName}>
@@ -64,13 +41,15 @@ module.exports = React.createClass({
 						<input type="text" placeholder="Search country" ref="search" onKeyUp={this._onSearch} />
 					</div>
 
-					<ul className="selected">
+					<div className="scrollable">
+						<ul className="selected">
+							{this._getSelected()}
+						</ul>
 
-					</ul>
-
-					<ul className="options">
-						{this._getOptions()}
-					</ul>
+						<ul className="options">
+							{this._getOptions()}
+						</ul>
+					</div>
 				</div>
 
 			</div>
@@ -85,20 +64,61 @@ module.exports = React.createClass({
 
 	_getOptions: function(){
 
-		return this.state.items.map(function(item){
+		return this.state.available.map(function(item){
+
+			// Should this item be visible based on filter
 			if(!!this.state.filter && item.text.toLowerCase().substring(0, this.state.filter.length) !== this.state.filter.toLowerCase()) return null;
-			var className = '';
-			if(!!this.state.selected && this.state.selected.value === item.value) className = 'selected';
-			return (<li key={item.value} className={className} onClick={this._onItemClick.bind(this, item)}>{item.text}</li>);
+			return (<li key={item.value} onClick={this._onItemClick.bind(this, item)}>{item.text}</li>);
+
+		}.bind(this));	
+
+	},
+
+	_getSelected: function(){
+
+		return this.state.selected.map(function(item){
+
+			// Should this item be visible based on filter
+			if(!!this.state.filter && item.text.toLowerCase().substring(0, this.state.filter.length) !== this.state.filter.toLowerCase()) return null;
+			return (<li key={item.value} onClick={this._onSelectedClick.bind(this, item)}>{item.text}</li>);
+
 		}.bind(this));	
 
 	},
 
 	_onItemClick: function(item){
+
+		var available = this.state.available.filter(function(_item){
+			return _item.value !== item.value;
+		});
+
+		var selected = this.state.selected;
+		selected.push(item);
+
 		this.setState({
 			filter: '',
-			selected: !!this.state.selected && item.value === this.state.selected.value ? null : item,
-			showOptions: false
+			selected: selected,
+			available: available,
+			showOptions: true
+		});
+		var node = this.refs.search.getDOMNode();
+		node.value = '';
+	},
+
+	_onSelectedClick: function(item){
+
+		var selected = this.state.selected.filter(function(_item){
+			return _item.value !== item.value;
+		});
+
+		var available = this.state.available;
+		available.push(item);
+
+		this.setState({
+			filter: '',
+			selected: selected,
+			available: available,
+			showOptions: true
 		});
 		var node = this.refs.search.getDOMNode();
 		node.value = '';

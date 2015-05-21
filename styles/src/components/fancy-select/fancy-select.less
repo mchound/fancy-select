@@ -81,8 +81,7 @@
 		background-color: @clr-background;
 	}
 
-	.options{
-
+	.scrollable{
 		position: absolute;
 		top: 103px;
 		bottom: 0;
@@ -90,11 +89,24 @@
 		left: 0;
 		right: 0;
 
+		li:last-child{
+			border-bottom: 1px solid darken(@clr-border, 5%);
+		}
+	}
+
+	.options{
+
+		position: relative;
+
 		li:hover,
 		.selected{
 			background: @clr-border;
 		}
 
+	}
+
+	.selected{
+		background-color: @clr-border;
 	}
 
 	.search{
