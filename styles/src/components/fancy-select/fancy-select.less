@@ -83,15 +83,11 @@
 
 	.scrollable{
 		position: absolute;
-		top: 103px;
+		top: 44px;
 		bottom: 0;
 		overflow-y: auto;
 		left: 0;
 		right: 0;
-
-		li:last-child{
-			border-bottom: 1px solid darken(@clr-border, 5%);
-		}
 	}
 
 	.options{
@@ -107,6 +103,10 @@
 
 	.selected{
 		background-color: @clr-border;
+
+		li:last-child{
+			border-bottom: 1px solid darken(@clr-border, 5%);
+		}
 	}
 
 	.search{
@@ -165,4 +165,15 @@
 		visibility: hidden;
 	}
 
+}
+
+[data-am-fancyselect~="searchable"]{
+	
+	.scrollable{
+		top: 103px;
+	}
+}
+
+[data-am-fancyselect~="multiple"]{
+	
 }

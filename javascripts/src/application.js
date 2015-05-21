@@ -27,6 +27,10 @@ window.onload = function () {
 				{value: 'es', text: 'Estonia'},
 				{value: 'lv', text: 'Latvia'},
 				{value: 'li', text: 'Lithuania'}
-			]
+			],
+		multiple: false,
+		label: 'Choose country',
+		searchable: true,
+		ordered: true
 	}), document.body);
 };
