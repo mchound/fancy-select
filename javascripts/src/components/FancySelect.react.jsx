@@ -134,7 +134,9 @@ module.exports = React.createClass({
 
 		if(this.props.multiple) this._onItemClickedForMultiple(item);
 		else this._onItemClickedForSingle(item);
-				
+		
+		if(!!this.props.onChange) this.props.onChange(this.state.selected);
+
 		this._resetSearch();
 	},
 
@@ -153,6 +155,8 @@ module.exports = React.createClass({
 			available: available,
 			showOptions: true
 		});
+
+		if(!!this.props.onChange) this.props.onChange(this.state.selected);
 	},
 
 	_onItemClickedForSingle: function(item){
