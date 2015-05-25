@@ -7,24 +7,26 @@ module.exports = React.createClass({
 
 		return {
 			available: this.props.items,
-			selected: [],
-			selectedDOMNode: null 
+			selected: this.props.selected || null,
+			selectedDOMNode: null,
+			started: false
 		};
 
 	},
 
 	componentDidMount: function(){
-		
+		var node = this.refs.selected.getDOMNode();
+		this.setState({selectedDOMNode: node});
 	},
 
 	render: function(){
 
 		var marker = null;
 
-		if(this.state.selected.length > 0) marker = (<div key="marker" className="marker" style={this._getMarkerStyle()}></div>);
+		if(!!this.state.selected) marker = (<div key="marker" className="marker" style={this._getMarkerStyle()}></div>);
 
 		return (
-			<div data-am-toggleslide>
+			<div data-am-toggleslide className={this.state.started ? 'started' : ''}>
 
 				<ul>
 					{this._getOptions()}
@@ -52,20 +54,33 @@ module.exports = React.createClass({
 	_getOptions: function(){
 
 		return this.state.available.map(function(o){
-			var className = this.state.selected.length > 0 && this.state.selected[0].value === o.value ? 'selected' : '';
-			return (<li key={o.value} className={className} onClick={this._onItemClick.bind(this, o)}><span>{o.text}</span></li>);
+			
+			if(!!this.state.selected && this.state.selected.value === o.value){
+				return (<li key={o.value} className='selected' ref="selected" onClick={this._onItemClick.bind(this, o)}><span>{o.text}</span></li>);
+			}
+			else {
+				return (<li key={o.value} onClick={this._onItemClick.bind(this, o)}><span>{o.text}</span></li>);
+			}
+
+			
 		}.bind(this));
 
 	},
 
 	_onItemClick: function(item, e){
-		var isReset = this.state.selected.length > 0 && this.state.selected[0].value === item.value;
-		var selected = isReset ? [] : [item];
+		var isReset = !!this.state.selected > 0 && this.state.selected.value === item.value;
+
+		if(!this.props.resetable && isReset) return;
+
+		var selected = isReset ? null : item;
 		var target = isReset ? null : (e.target.nodeName === 'SPAN' ? e.target.parentNode : e.target);
+
+		if(!!this.props.onChange) this.props.onChange(selected);
 
 		this.setState({
 			selected: selected,
-			selectedDOMNode: target
+			selectedDOMNode: target,
+			started: true
 		});
 	}
 
