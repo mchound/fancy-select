@@ -6,8 +6,8 @@ module.exports = React.createClass({
 
 		return {
 			showOptions: false,
-			available: this.props.items,
-			selected: [],
+			available: this.props.items.outersect(this.props.selected, 'value'),
+			selected: this.props.selected || [],
 			filter: ''
 		};
 
@@ -122,8 +122,6 @@ module.exports = React.createClass({
 
 		if(this.props.multiple) this._onItemClickedForMultiple(item);
 		else this._onItemClickedForSingle(item);
-		
-		if(!!this.props.onChange) this.props.onChange(this.state.selected);
 
 		this._resetSearch();
 	},
@@ -144,7 +142,7 @@ module.exports = React.createClass({
 			showOptions: true
 		});
 
-		if(!!this.props.onChange) this.props.onChange(this.state.selected);
+		if(!!this.props.onChange) this.props.onChange(selected);
 	},
 
 	_onItemClickedForSingle: function(item){
@@ -156,6 +154,8 @@ module.exports = React.createClass({
 			selected: selected,
 			showOptions: false
 		});
+
+		if(!!this.props.onChange) this.props.onChange(selected);
 	},
 
 	_onItemClickedForMultiple: function(item){
@@ -172,6 +172,8 @@ module.exports = React.createClass({
 			available: available,
 			showOptions: true
 		});
+
+		if(!!this.props.onChange) this.props.onChange(selected);
 	},
 
 	_onSelectClick: function(e){
