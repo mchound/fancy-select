@@ -74,7 +74,7 @@ module.exports = React.createClass({
 		
 		return attrs.concat(propAttrs).join(' ');
 
-	}
+	},
 
 	_getLabel: function(){
 
