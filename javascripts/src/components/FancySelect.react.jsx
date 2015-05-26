@@ -67,7 +67,7 @@ module.exports = React.createClass({
 
 	_getAttrs: function(){
 		var attrs = [];
-		var propAttrs = this.props.attributes ?? [];
+		var propAttrs = this.props.attributes || [];
 
 		if(this.props.multiple) attrs.push('multiple');
 		if(this.props.searchable) attrs.push('searchable');
